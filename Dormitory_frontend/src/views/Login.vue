@@ -24,7 +24,7 @@
         </div>
     </div>
     <div class="footer">
-        ©Copyright 1958-2024 江西理工大学
+        ©Copyright 1983-2024 南阳理工学院
     </div>
 </template>
 <script src="@/assets/js/Login.js"></script>

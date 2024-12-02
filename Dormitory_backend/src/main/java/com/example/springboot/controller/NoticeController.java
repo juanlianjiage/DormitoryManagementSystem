@@ -1,15 +1,20 @@
 package com.example.springboot.controller;
 
 
+import cn.hutool.log.Log;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.springboot.common.Result;
 import com.example.springboot.entity.Notice;
 import com.example.springboot.service.NoticeService;
+import jdk.nashorn.internal.runtime.logging.Logger;
+import lombok.extern.log4j.Log4j;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.List;
 
+@Slf4j
 @RestController
 @RequestMapping("/notice")
 public class NoticeController {
@@ -18,16 +23,20 @@ public class NoticeController {
     NoticeService noticeService;
 
     /**
-     * 公告添加
+     * 公告添加，并对所有学生发送邮件  //TODO 后续对不同楼群的学生发送邮件
      */
     @PostMapping("/add")
     public Result<?> add(@RequestBody Notice notice) {
-        int i = noticeService.addNewNotice(notice);
-        if (i == 1) {
-            return Result.success();
-        } else {
-            return Result.error("-1", "添加失败");
-        }
+
+        noticeService.addNewNotice(notice);
+//        try {
+//
+//        }catch (RuntimeException e){
+//            log.error("由于邮件发送失败，请重新添加公告");
+//            return Result.error("-1", "添加失败");
+//        }
+        return Result.success();
+
     }
 
     /**

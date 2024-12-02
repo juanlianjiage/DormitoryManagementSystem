@@ -1,16 +1,22 @@
 package com.example.springboot.service.impl;
 
+import com.example.springboot.utils.EmailUtils;
+import com.google.common.collect.Lists;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.springboot.entity.Notice;
+import com.example.springboot.entity.Student;
 import com.example.springboot.mapper.NoticeMapper;
+import com.example.springboot.mapper.StudentMapper;
 import com.example.springboot.service.NoticeService;
 import org.springframework.stereotype.Service;
-import org.springframework.util.Assert;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
 
 
 @Service
@@ -23,13 +29,49 @@ public class NoticeServiceImpl extends ServiceImpl<NoticeMapper, Notice> impleme
     @Resource
     private NoticeMapper noticeMapper;
 
+    @Resource
+    private StudentMapper studentMapper;
+
+    @Resource
+    ExecutorService executorService;
+
+    @Resource
+    private EmailUtils emailUtils;
+
+
     /**
      * 公告添加
      */
+    @Transactional
     @Override
-    public int addNewNotice(Notice notice) {
+    public void addNewNotice(Notice notice) {
         int insert = noticeMapper.insert(notice);
-        return insert;
+        if (insert != 1){
+            throw new RuntimeException("邮件添加失败！");
+        }
+        QueryWrapper<Student> queryWrapper = new QueryWrapper<>();
+        queryWrapper.last("where 1 = 1");
+        List<Student> students = studentMapper.selectList(queryWrapper);
+        List<String> emails = new ArrayList<>();
+        students.forEach(student -> {
+            if (student.getEmail() != null && student.getEmail().length() > 0 ){
+                emails.add(student.getEmail());
+            }
+        });
+        try{
+            List<List<String>> emailsPartitions = Lists.partition(emails, 50);
+            emailsPartitions.forEach(ep -> {
+                ep.forEach(email->{
+                    executorService.execute(()->{
+                       emailUtils.sendEmail(email, notice.getTitle(), notice.getContent());
+                    });
+                });
+            });
+        }catch (RuntimeException e){
+            System.out.println("邮件发送失败，请重试！");
+            throw e;
+        }
+
     }
 
     /**
@@ -74,4 +116,5 @@ public class NoticeServiceImpl extends ServiceImpl<NoticeMapper, Notice> impleme
         return noticeList;
         
     }
+
 }

@@ -1,7 +1,6 @@
 package com.example.springboot.controller;
 
 import com.example.springboot.common.Result;
-import com.example.springboot.common.UID;
 import com.example.springboot.entity.Admin;
 import com.example.springboot.entity.User;
 import com.example.springboot.service.AdminService;
@@ -13,9 +12,6 @@ import javax.servlet.http.HttpSession;
 @RestController
 @RequestMapping("/admin")
 public class AdminController {
-
-    String uid = new UID().produceUID();
-
     @Resource
     private AdminService adminService;
 

@@ -11,7 +11,7 @@ public interface NoticeService extends IService<Notice> {
 
 
     //新增通知
-    int addNewNotice(Notice notice);
+    void addNewNotice(Notice notice);
 
     //查询
     Page find(Integer pageNum, Integer pageSize, String search);
