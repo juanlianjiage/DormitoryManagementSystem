@@ -2,8 +2,13 @@ package com.example.springboot.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.springboot.common.Result;
+import com.example.springboot.entity.Notice;
 import com.example.springboot.entity.Repair;
+import com.example.springboot.service.NoticeService;
 import com.example.springboot.service.RepairService;
+import com.example.springboot.utils.EmailUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -14,13 +19,15 @@ public class RepairController {
 
     @Resource
     private RepairService repairService;
-
+    @Resource
+    private EmailUtils emailUtils;
     /**
-     * 添加订单
+     * 添加订单,并发邮件通知管理员
      */
     @PostMapping("/add")
     public Result<?> add(@RequestBody Repair repair) {
         int i = repairService.addNewOrder(repair);
+        emailUtils.sendEmail("2521856799@qq.com", repair.getTitle(), repair.getContent());
         if (i == 1) {
             return Result.success();
         } else {

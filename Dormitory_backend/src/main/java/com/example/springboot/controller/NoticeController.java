@@ -23,7 +23,7 @@ public class NoticeController {
     NoticeService noticeService;
 
     /**
-     * 公告添加，并对所有学生发送邮件  //TODO 后续对不同楼群的学生发送邮件
+     * 公告添加，并对所有学生发送邮件
      */
     @PostMapping("/add")
     public Result<?> add(@RequestBody Notice notice) {

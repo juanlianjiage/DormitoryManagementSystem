@@ -7,6 +7,7 @@ import com.example.springboot.entity.Repair;
 import com.example.springboot.mapper.RepairMapper;
 import com.example.springboot.service.RepairService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import javax.annotation.Resource;
@@ -25,6 +26,7 @@ public class RepairServiceImpl extends ServiceImpl<RepairMapper, Repair> impleme
      * 添加订单
      */
     @Override
+    @Transactional
     public int addNewOrder(Repair repair) {
         int insert = repairMapper.insert(repair);
         return insert;
