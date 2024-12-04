@@ -27,7 +27,7 @@ public class RepairController {
     @PostMapping("/add")
     public Result<?> add(@RequestBody Repair repair) {
         int i = repairService.addNewOrder(repair);
-        emailUtils.sendEmail("2521856799@qq.com", repair.getTitle(), repair.getContent());
+        emailUtils.sendEmail("2521856799@qq.com", repair.getTitle()+"-"+repair.getDormRoomId(), repair.getContent());
         if (i == 1) {
             return Result.success();
         } else {
