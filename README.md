@@ -29,7 +29,7 @@
 #### 4、环境：
 
 JDK>=1.8、Maven、Node.js >=16、MySQL >=8.0
- 
+
 #### 5、硬件环境：
 
 Windows 或者 Mac OS(不挑剔)
