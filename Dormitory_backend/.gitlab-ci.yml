@@ -1,0 +1,25 @@
+image: maven:3.5.2-jdk-8 # 使用与您的Maven版本相匹配的Docker镜像
+
+stages:
+  - build
+  - test
+  - coverage
+
+build:
+  stage: build
+  script:
+    - mvn clean package
+
+test:
+  stage: test
+  script:
+    - mvn test
+
+coverage:
+  stage: coverage
+  script:
+    - mvn jacoco:report
+  artifacts:
+    reports:
+      junit: target/surefire-reports/* # 可选：上传JUnit测试报告
+      cobertura: target/site/cobertura/coverage.xml # 注意：这里使用的是Cobertura格式的报告名称，但Jacoco生成的报告也可以被GitLab读取（需要配置正则表达式）
